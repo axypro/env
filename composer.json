@@ -1,0 +1,24 @@
+{
+    "name": "axy/env",
+    "type": "library",
+    "description": "Abstracting access to the environment",
+    "keywords": [
+        "environment"
+    ],
+    "homepage": "https://github.com/axypro/env",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Oleg Grigoriev",
+            "email": "go.vasac@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0"        
+    },
+    "autoload": {
+        "psr-4": {
+            "axy\\env\\": ""
+        }
+    }
+}
