@@ -10,10 +10,17 @@ use axy\env\helpers\Normalizer;
 use axy\errors\InvalidConfig;
 use axy\errors\FieldNotExist;
 use axy\errors\Disabled;
+use axy\errors\ContainerReadOnly;
 
 /**
  * Wrapper for the environment
  *
+ * @property-read array $server
+ * @property-read array $env
+ * @property-read array $get
+ * @property-read array $post
+ * @property-read array $request
+ * @property-read array $cookie
  * @method void header(string $string, bool $replace = true, int $http_response_code = null)
  * @method bool setcookie(string $name,string $val,int $e=0,string $p=null,string $d=null,bool $s=false,bool $h = false)
  * @method array getallheaders()
@@ -123,6 +130,54 @@ class Env
         return $this->__call('time', []);
     }
 
+    /**
+     * Magic isset
+     *
+     * @param string $key
+     * @return bool
+     */
+    public function __isset($key)
+    {
+        return in_array($key, self::$envArrays);
+    }
+
+    /**
+     * Magic get
+     *
+     * @param string $key
+     * @return mixed
+     * @throws \axy\errors\FieldNotExist
+     */
+    public function __get($key)
+    {
+        if (!in_array($key, self::$envArrays)) {
+            throw new FieldNotExist($key, 'Env', null, $this);
+        }
+        return $this->config->$key;
+    }
+
+    /**
+     * Magic set
+     *
+     * @param string $key
+     * @param mixed $value
+     */
+    public function __set($key, $value)
+    {
+        throw new ContainerReadOnly('Env', null, $this);
+    }
+
+    /**
+     * Magic unset
+     *
+     * @param string $key
+     * @throws \axy\errors\ContainerReadOnly
+     */
+    public function __unset($key)
+    {
+        throw new ContainerReadOnly('Env', null, $this);
+    }
+
     private function initTime()
     {
         if (($this->config->time !== null) && ($this->config->timeChanging)) {
@@ -134,4 +189,9 @@ class Env
      * @var \axy\env\Config
      */
     private $config;
+
+    /**
+     * @var string[]
+     */
+    private static $envArrays = ['server', 'env', 'get', 'post', 'request', 'cookie', 'files'];
 }

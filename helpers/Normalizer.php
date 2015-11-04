@@ -24,6 +24,7 @@ class Normalizer
     {
         self::normalizeFunctions($config);
         self::normalizeTime($config);
+        self::normalizeArrays($config);
     }
 
     /**
@@ -63,5 +64,31 @@ class Normalizer
             }
         }
         $config->time = $ts;
+    }
+
+    /**
+     * @param \axy\env\Config $config
+     * @throws \axy\errors\InvalidConfig
+     * @SuppressWarnings(PHPMD.Superglobals)
+     */
+    private static function normalizeArrays(Config $config)
+    {
+        $conf = [
+            'server' => $_SERVER,
+            'env' => $_ENV,
+            'get' => $_GET,
+            'post' => $_POST,
+            'cookie' => $_COOKIE,
+            'request' => $_REQUEST,
+            'files' => $_FILES,
+        ];
+        foreach ($conf as $k => $v) {
+            if ($config->$k === null) {
+                $config->$k = $v;
+            } elseif (!is_array($config->$k)) {
+                $message = 'field "'.$k.'" must be an array';
+                throw new InvalidConfig('Env', $message, 0, null, __NAMESPACE__);
+            }
+        }
     }
 }

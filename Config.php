@@ -71,4 +71,53 @@ class Config
      * @var bool
      */
     public $timeChanging = false;
+
+    /**
+     * Wrapper for $_SERVER
+     *
+     * @var array
+     */
+    public $server;
+
+    /**
+     * Wrapper for $_ENV
+     *
+     * @var array
+     */
+    public $env;
+
+    /**
+     * Wrapper for $_GET
+     *
+     * @var array
+     */
+    public $get;
+
+    /**
+     * Wrapper for $_POST
+     *
+     * @var array
+     */
+    public $post;
+
+    /**
+     * Wrapper for $_COOKIE
+     *
+     * @var array
+     */
+    public $cookie;
+
+    /**
+     * Wrapper for $_REQUEST
+     *
+     * @var array
+     */
+    public $request;
+
+    /**
+     * Wrapper for $_FILES
+     *
+     * @var array
+     */
+    public $files;
 }

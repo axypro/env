@@ -1,5 +1,14 @@
 ### dev-master
 
+* Access to the current time
+* Access to super-global arrays
+    * `$_SERVER`
+    * `$_ENV`
+    * `$_GET`
+    * `$_POST`
+    * `$_COOKIE`
+    * `$_REQUEST`
+    * `$_FILES`
 * Override global functions
     * `header()`
     * `setcookie()`

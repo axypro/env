@@ -101,4 +101,28 @@ class NormalizerTest extends \PHPUnit_Framework_TestCase
             ],
         ];
     }
+
+    /**
+     * covers ::normalize
+     * @SuppressWarnings(PHPMD.Superglobals)
+     */
+    public function testNormalizeArrays()
+    {
+        $config = new Config();
+        $config->get = ['myVar' => 5];
+        Normalizer::normalize($config);
+        $this->assertSame(['myVar' => 5], $config->get);
+        $this->assertSame($_SERVER, $config->server);
+    }
+
+    /**
+     * @expectedException \axy\errors\InvalidConfig
+     * @expectedExceptionMessage field "post" must be an array
+     */
+    public function testNormalizeArraysError()
+    {
+        $config = new Config();
+        $config->post = 5;
+        Normalizer::normalize($config);
+    }
 }
