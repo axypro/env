@@ -48,12 +48,13 @@ class Config
      *
      * NULL - use time()
      * int or numeric string - a timestamp
-     * string - a string for the strtotime() function
+     * string - a string for the `strtotime()` function
      *
      * 1234567890 - a timestamp (2009-02-14 02:31:30)
      * "1234567890" - similarly
      * "2015-11-04 10:11:12" - a time in the current timezone
      * "2015-11-04" - "2015-11-04 00:00:00"
+     * "+1 month" - relative time for `strtotime()`
      *
      * @var string|int
      */
