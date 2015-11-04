@@ -7,6 +7,7 @@
 namespace axy\env\tests;
 
 use axy\env\Env;
+use axy\env\Config;
 
 /**
  * coversDefaultClass axy\env\Env
@@ -82,5 +83,15 @@ class EnvTimeTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('2015-11-03 12:00:10', date('Y-m-d H:i:s', $env->getCurrentTime()));
         $time += 3600;
         $this->assertSame('2015-11-03 13:00:10', date('Y-m-d H:i:s', $env->getCurrentTime()));
+    }
+
+    public function testClone()
+    {
+        $config = new Config();
+        $config->time = 1234567890;
+        $env = new Env($config);
+        $this->assertSame(1234567890, $env->getCurrentTime());
+        $config->time = 5454345;
+        $this->assertSame(1234567890, $env->getCurrentTime());
     }
 }

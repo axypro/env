@@ -42,6 +42,7 @@ class Env
             if (is_array($config)) {
                 $config = new Config($config);
             } elseif ($config instanceof Config) {
+                $config = clone $config;
             } else {
                 throw new InvalidConfig('Env', 'config must be an array or an instance of \axy\env\Config');
             }
