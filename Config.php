@@ -25,7 +25,7 @@ class Config
     {
         if ($config !== null) {
             foreach ($config as $k => $v) {
-                if (!isset($this->$k)) {
+                if (!property_exists($this, $k)) {
                     $message = 'parameter "'.$k.'" is unknown';
                     throw new InvalidConfig('Env', $message, 0, null, $this);
                 }

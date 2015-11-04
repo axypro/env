@@ -11,7 +11,7 @@ use axy\env\Env;
 /**
  * coversDefaultClass axy\env\Env
  */
-class EnvTest extends \PHPUnit_Framework_TestCase
+class EnvFunctionsTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider providerInvalidConfig

@@ -48,6 +48,7 @@ class Env
             Normalizer::normalize($config);
         }
         $this->config = $config;
+        $this->initTime();
     }
 
     /**
@@ -101,6 +102,31 @@ class Env
             throw new FieldNotExist($name, 'global', null, $this);
         }
         return call_user_func_array($name, $arguments);
+    }
+
+    /**
+     * Returns a timestamp of the current time
+     *
+     * @return int
+     */
+    public function getCurrentTime()
+    {
+        $config = $this->config;
+        $time = $config->time;
+        if ($time !== null) {
+            if ($config->timeChanging) {
+                return $this->__call('time', []) + $time;
+            }
+            return $time;
+        }
+        return $this->__call('time', []);
+    }
+
+    private function initTime()
+    {
+        if (($this->config->time !== null) && ($this->config->timeChanging)) {
+            $this->config->time -= $this->__call('time', []);
+        }
     }
 
     /**
