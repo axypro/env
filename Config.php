@@ -18,7 +18,7 @@ class Config
      *
      * @param array $config [optional]
      *        parameters for merging
-     * @throws InvalidConfig
+     * @throws \axy\errors\InvalidConfig
      *         some parameters are unknown
      */
     public function __construct(array $config = null)
