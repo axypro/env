@@ -24,6 +24,9 @@ class EnvTest extends \PHPUnit_Framework_TestCase
         return new Env($aConfig);
     }
 
+    /**
+     * @return array
+     */
     public function providerInvalidConfig()
     {
         return [
@@ -44,5 +47,25 @@ class EnvTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
         ];
+    }
+
+    /**
+     * covers ::isFunctionsExists
+     */
+    public function testIsFunctionsExists()
+    {
+        $config = [
+            'functions' => [
+                'time' => 'myTime',
+                'my_function_that_not_exists_in_global' => 'myFunc',
+                'strlen' => null,
+            ],
+        ];
+        $env = new Env($config);
+        $this->assertTrue($env->isFunctionExists('time'));
+        $this->assertTrue($env->isFunctionExists('my_function_that_not_exists_in_global'));
+        $this->assertTrue($env->isFunctionExists('strtotime'));
+        $this->assertFalse($env->isFunctionExists('strlen'));
+        $this->assertFalse($env->isFunctionExists('function_9231m123n_does__not_exists'));
     }
 }

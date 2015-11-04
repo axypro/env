@@ -37,6 +37,21 @@ class Env
     }
 
     /**
+     * Checks if a function exists (global or overloaded)
+     *
+     * @param string $functionName
+     * @return bool
+     */
+    public function isFunctionExists($functionName)
+    {
+        $functions = $this->config->functions;
+        if (array_key_exists($functionName, $functions)) {
+            return ($functions[$functionName] !== null);
+        }
+        return function_exists($functionName);
+    }
+
+    /**
      * @var \axy\env\Config
      */
     private $config;
