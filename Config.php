@@ -42,4 +42,33 @@ class Config
      * @var callable[]
      */
     public $functions = [];
+
+    /**
+     * Overriding the current time
+     *
+     * NULL - use time()
+     * int or numeric string - a timestamp
+     * string - a string for the strtotime() function
+     *
+     * 1234567890 - a timestamp (2009-02-14 02:31:30)
+     * "1234567890" - similarly
+     * "2015-11-04 10:11:12" - a time in the current timezone
+     * "2015-11-04" - "2015-11-04 00:00:00"
+     *
+     * @var string|int
+     */
+    public $time;
+
+    /**
+     * Is time changing?
+     *
+     * If specified the field `time` and `timeChanging` is `FALSE`
+     * then `$eng->getCurrentTime()` is constantly throughout the script.
+     *
+     * If `timeChanging` then `time` specified the time of begin and `getCurrentTime()`
+     * returns changing time (for long-term scenarios).
+     *
+     * @var bool
+     */
+    public $timeChanging = false;
 }
