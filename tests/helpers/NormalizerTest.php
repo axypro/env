@@ -49,8 +49,7 @@ class NormalizerTest extends \PHPUnit_Framework_TestCase
         } elseif (is_array($expected)) {
             Normalizer::normalize($config);
             $this->assertInternalType('int', $config->time);
-            $this->assertGreaterThanOrEqual($expected[0], $config->time);
-            $this->assertLessThanOrEqual($expected[1], $config->time);
+            $this->assertEquals($expected['time'], $config->time, '', $expected['delta']);
         } else {
             Normalizer::normalize($config);
             $this->assertSame($expected, $config->time);
@@ -81,7 +80,10 @@ class NormalizerTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 '+1 week',
-                [time() + 7 * 86400, time() + 7 * 86400 + 2],
+                [
+                    'time' => time() + 7 * 86400,
+                    'delta' => 30,
+                ],
             ],
             [
                 [],

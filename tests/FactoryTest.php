@@ -22,7 +22,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     {
         $env = Factory::getStandard();
         $this->assertInstanceOf('axy\env\Env', $env);
-        $this->assertEquals(time(), $env->getCurrentTime(), '', 2);
+        $this->assertEquals(time(), $env->getCurrentTime(), '', 30);
         $this->assertSame($env, Factory::getStandard());
     }
 

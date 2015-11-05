@@ -23,8 +23,7 @@ class EnvTimeTest extends \PHPUnit_Framework_TestCase
         $now = time();
         $actual = $env->getCurrentTime();
         $this->assertInternalType('int', $actual);
-        $this->assertGreaterThanOrEqual($now, $actual);
-        $this->assertLessThanOrEqual($now + 3, $actual);
+        $this->assertEquals($now, $actual, '', 30);
     }
 
     /**
