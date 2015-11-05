@@ -164,6 +164,7 @@ class EnvFunctionsTest extends \PHPUnit_Framework_TestCase
             ],
         ];
         $env = new Env($config);
+        /** @noinspection PhpUndefinedMethodInspection */
         $this->assertSame(3, $env->strlen('123'));
         $env->header('Content-Type: text/html; charset=utf-8');
         $env->header('X-Header: 5');

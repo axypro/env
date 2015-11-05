@@ -7,7 +7,6 @@
 namespace axy\env\tests;
 
 use axy\env\Env;
-use axy\errors\ContainerReadOnly;
 
 /**
  * coversDefaultClass axy\env\Env
@@ -30,6 +29,7 @@ class EnvArraysTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(['x' => 1], $env->post);
         $this->assertSame($_SERVER, $env->server);
         $this->setExpectedException('axy\errors\FieldNotExist');
+        /** @noinspection PhpUndefinedFieldInspection */
         return $env->unknown;
     }
 

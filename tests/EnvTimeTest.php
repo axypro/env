@@ -48,7 +48,7 @@ class EnvTimeTest extends \PHPUnit_Framework_TestCase
             'time' => '2015-11-03 12:00:00',
             'timeChanging' => false,
             'functions' => [
-                'time' => function () use ($time) {
+                'time' => function () use (&$time) {
                     return $time;
                 },
             ],
@@ -57,12 +57,14 @@ class EnvTimeTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('2015-11-03 12:00:00', date('Y-m-d H:i:s', $env->getCurrentTime()));
         $time += 10;
         $this->assertSame('2015-11-03 12:00:00', date('Y-m-d H:i:s', $env->getCurrentTime()));
+        /** @noinspection PhpUnusedLocalVariableInspection */
         $time += 3600;
         $this->assertSame('2015-11-03 12:00:00', date('Y-m-d H:i:s', $env->getCurrentTime()));
     }
 
     /**
      * covers ::getCurrentTime()
+     * @noinspection PhpUnusedLocalVariableInspection
      */
     public function testChangingTime()
     {
@@ -80,6 +82,7 @@ class EnvTimeTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('2015-11-03 12:00:00', date('Y-m-d H:i:s', $env->getCurrentTime()));
         $time += 10;
         $this->assertSame('2015-11-03 12:00:10', date('Y-m-d H:i:s', $env->getCurrentTime()));
+        /** @noinspection PhpUnusedLocalVariableInspection */
         $time += 3600;
         $this->assertSame('2015-11-03 13:00:10', date('Y-m-d H:i:s', $env->getCurrentTime()));
     }

@@ -278,7 +278,7 @@ $config = [
 #### Functions list
 
 It is intended for functions that access the environment.
-In phpdocs for autocomplete lists the following:
+In phpdoc for autocomplete lists the following:
 
  * [header](http://php.net/header)
  * [setcookie](http://php.net/setcookie)
