@@ -91,7 +91,8 @@ class EnvFunctionsTest extends \PHPUnit_Framework_TestCase
                 if ($x > 1) {
                     throw new \InvalidArgumentException($x.' > 1');
                 }
-            }
+            },
+            'callbackNotExists' => 'callback__no_t_ex_ist',
         ];
         $config = [
             'functions' => $functions,
@@ -149,6 +150,12 @@ class EnvFunctionsTest extends \PHPUnit_Framework_TestCase
                 [5],
                 null,
                 'InvalidArgumentException',
+            ],
+            'callbackNotExists' => [
+                'callbackNotExists',
+                [],
+                null,
+                'axy\errors\FieldNotExist',
             ],
         ];
     }
