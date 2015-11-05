@@ -1,4 +1,4 @@
-### dev-master
+### 0.1.0 (5.11.2015)
 
 * Access to the current time
 * Access to super-global arrays
@@ -21,3 +21,4 @@
     * `error_reporting()`
     * `date_default_timezone_get()`
     * `date_default_timezone_set()`
+* Documentation

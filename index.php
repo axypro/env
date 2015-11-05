@@ -7,6 +7,7 @@
  * @license https://raw.github.com/axypro/env/master/LICENSE MIT
  * @link https://github.com/axypro/env repository
  * @link https://packagist.org/packages/axy/env composer package
+ * @link https://github.com/axypro/env/blob/master/README.md documentation
  * @uses PHP5.4+
  */
 
