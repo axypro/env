@@ -1,3 +1,9 @@
+### 0.1.1 (5.11.2015)
+
+* New global functions in phpdoc:
+    * `set_error_handler()`
+    * `set_exceptions_handler()`
+
 ### 0.1.0 (5.11.2015)
 
 * Access to the current time

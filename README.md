@@ -291,6 +291,8 @@ In phpdoc for autocomplete lists the following:
  * [error_reporting](http://php.net/error_reporting)
  * [date_default_timezone_get](http://php.net/date_default_timezone_get)
  * [date_default_timezone_set](http://php.net/date_default_timezone_set)
+ * [set_error_handler](http://php.net/set_error_handler)
+ * [set_exception_handler](http://php.net/set_exception_handler)
 
 But theoretically it can be used for any function.
 

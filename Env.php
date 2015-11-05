@@ -32,6 +32,8 @@ use axy\errors\ContainerReadOnly;
  * @method int error_reporting(int $level = null)
  * @method string date_default_timezone_get()
  * @method bool date_default_timezone_set(string $timezone_identifier)
+ * @method mixed set_error_handler(callable $error_handler, int $error_types = 32767)
+ * @method callable set_exception_handler(callable $exception_handler)
  */
 class Env
 {
