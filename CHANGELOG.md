@@ -1,3 +1,7 @@
+### 0.1.2 (10.11.2015)
+
+* Exclude tests, docs and etc from GitHub zip and Composer package dist.
+
 ### 0.1.1 (5.11.2015)
 
 * New global functions in phpdoc:
