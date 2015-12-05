@@ -1,19 +1,19 @@
 # axy\env
 
+Abstracting access to the environment (PHP).
+
 [![Latest Stable Version](https://img.shields.io/packagist/v/axy/env.svg?style=flat-square)](https://packagist.org/packages/axy/env)
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%205.4-8892BF.svg?style=flat-square)](https://php.net/)
 [![Build Status](https://img.shields.io/travis/axypro/env/master.svg?style=flat-square)](https://travis-ci.org/axypro/env)
+[![Coverage Status](https://coveralls.io/repos/axypro/env/badge.svg?branch=master&service=github)](https://coveralls.io/github/axypro/env?branch=master)
+[![License](https://poser.pugx.org/axy/env/license)](LICENSE)
 
-Abstracting access to the environment
+* The library does not require any dependencies (except composer packages).
+* Tested on PHP 5.4+, PHP 7, HHVM (on Linux).
+* Install: `composer require axy/env`.
+* License: [MIT](LICENSE).
 
-* GitHub: [axypro/env](https://github.com/axypro/env)
-* Composer: [axy/env](https://packagist.org/packages/axy/env)
-
-PHP 5.4+
-
-Library does not require any dependencies (except composer packages).
-
-## Purposes
+### Documentation
 
 The library provides the abstract layer for access to the environment.
 The environment is
@@ -24,34 +24,34 @@ The environment is
  * Server data (`$_SERVER`, `$_ENV`)
  * HTTP headers and cookies
  * and etc... any parameter whose modification may affect other parts of the system
- 
-If some code has direct access to super-global arrays or calls functions like `time()` or `header()` 
+
+If some code has direct access to super-global arrays or calls functions like `time()` or `header()`
 then it code becomes tied to the environment.
 This code is difficult to test and configure.
 
 The library provides the environment wrapper (an instance of `axy\env\Env` class).
 The application code gets this wrapper from the outside and works with the environment via it.
 By default the wrapper just delegates requests to standard functions.
-But this behaviour can be redefined (for test or an other purpose). 
+But this behaviour can be redefined (for test or an other purpose).
 
-## Example
+#### Example
 
 ```php
 use axy\env\Factory;
 
 class Service
 {
-    public function __construct($env = null) 
+    public function __construct($env = null)
     {
         $this->env = Factory::create($env);
     }
-    
+
     public function action()
     {
         $timeOfAction = $this->env->getCurrentTime();
-        // ...        
+        // ...
     }
-    
+
     private $env;
 }
 
@@ -69,7 +69,7 @@ $service = new Service(['time' => '2014-11-04 10:11:12']);
 $service->action(); // the service will receive the specified time
 ```
 
-## Config
+#### Config
 
 The environment wrapper with standard behaviour:
 
@@ -107,7 +107,7 @@ An array is simply, but the object supports autocomplete in IDE.
 Specific parameters of the config are described in the relevant sections below.
 
 
-#### Cloning
+##### Cloning
 
 ```php
 $config = new Config();
@@ -115,10 +115,10 @@ $config->time = '2015-11-04 11:11:11';
 $env = new Env($config);
 
 $config->time = '2011-02-03 10:10:10';
-echo date('j.m.Y', $env->getCurrentTime()); // 4.11.2015, config is cloned 
+echo date('j.m.Y', $env->getCurrentTime()); // 4.11.2015, config is cloned
 ```
 
-## Current Time
+#### Current Time
 
 Check the current time (returns a timestamp):
 
@@ -128,13 +128,13 @@ $env->getCurrentTime(void): int
 
 Parameter `time` specified the current time.
 It can be an int or a numeric string (timestamp) or a string for [strtotime](http://php.net/strtotime).
- 
+
  * 1234567890 - a timestamp (2009-02-14 02:31:30)
  * "1234567890" - similarly
  * "2015-11-04 10:11:12" - a time in the current timezone
  * "2015-11-04" - "2015-11-04 00:00:00"
  * "+1 month" - relative time for `strtotime()`
- 
+
 ```php
 
 $config->time = '2015-11-04 00:01:02';
@@ -143,13 +143,13 @@ $env = new Env($config);
 echo date('j.m.Y', $env->getCurrentTime()); // 4.11.2015
 ```
 
-#### Changing time
+##### Changing time
 
 `$env->getCurrentTime()` in the above example always returns the same time.
 For long-lived scenarios, the time change can be important.
 
 ```php
-/** 
+/**
  * Cron daemon
  * Once an hour to kill, not to eat a lot of memory
  */
@@ -163,7 +163,7 @@ while (time() - $startTime() < 3500) {
 ```
 
 If specified `timeChanging` then the time will be changing.
-  
+
 ```php
 
 $env = new Env([
@@ -176,9 +176,9 @@ sleep(7);
 echo date('H:i:s', $env->getCurrentTime()).PHP_EOL; // 11:20:37
 ```
 
-#### Custom function instead `time()`
+##### Custom function instead `time()`
 
-If `time` is not specified `getCurrentTime()` calls a wrapper of the global function `time()` 
+If `time` is not specified `getCurrentTime()` calls a wrapper of the global function `time()`
 (see below section "Global Functions").
 It can override.
 
@@ -190,7 +190,7 @@ $config = [
 ];
 ```
 
-## Super-Globals
+#### Super-Globals
 
 The super-globals arrays `$_SERVER`, `$_ENV`, `$_GET`, `$_POST`, `$_REQUEST`, `$_COOKIE`, `$_FILES` available via
 
@@ -217,7 +217,7 @@ $env->post['x']; // $_POST['x']
 ## Global Functions
 
 Magic `__call` delegates to global functions.
- 
+
 ```php
 $env->strlen('string'); // 6
 $env->header('Content-Type: text/plain'); // Send header
@@ -241,7 +241,7 @@ $env->header('Content-Type: text/plain'); // The header will not be sent
 
 Checking the existence of functions `$env->isFunctionExists(string $name):bool`.
 
-#### Example
+##### Example
 
 Function `getallheaders()` not exist in all environments.
 
@@ -279,7 +279,7 @@ $config = [
 ];
 ```
 
-#### Functions list
+##### Functions list
 
 It is intended for functions that access the environment.
 In phpdoc for autocomplete lists the following:
@@ -300,7 +300,7 @@ In phpdoc for autocomplete lists the following:
 
 But theoretically it can be used for any function.
 
-## Factory
+#### Factory
 
 ```php
 use axy\env\Factory;
@@ -339,30 +339,30 @@ $env1 = new Env([
     'time' => 123456,
 ]);
 
-$env2 = Factory::create($env1); // $env1 === $env2 
+$env2 = Factory::create($env1); // $env1 === $env2
 ```
 
 By default (`NULL`) specifies the standard wrapper.
 
 The target service can take wrapper in different formats and not to deal with them.
- 
+
 ```php
 use axy\env\Factory;
 
 class Service
 {
-    public function __construct($env = null) 
+    public function __construct($env = null)
     {
         $this->env = Factory::create($env);
     }
-    
+
     // ...
 }
 
 $service = new Service(['time' => '2011-01-01']);
 ```
 
-## Exceptions
+#### Exceptions
 
 The library can throw the following exceptions:
 
