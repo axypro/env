@@ -1,5 +1,8 @@
 ### dev-master
 
+### 0.1.3 (14.07.2015)
+
+* `echo()` can also be overridden
 * Travis & Coveralls.
 
 ### 0.1.2 (10.11.2015)
