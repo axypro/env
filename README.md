@@ -241,6 +241,8 @@ $env->header('Content-Type: text/plain'); // The header will not be sent
 
 Checking the existence of functions `$env->isFunctionExists(string $name):bool`.
 
+`echo()` can also be overridden.
+
 ##### Example
 
 Function `getallheaders()` not exist in all environments.

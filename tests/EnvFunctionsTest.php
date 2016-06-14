@@ -181,4 +181,26 @@ class EnvFunctionsTest extends \PHPUnit_Framework_TestCase
         ];
         $this->assertSame($expected, $headers);
     }
+
+    public function testEcho()
+    {
+        $echoed = null;
+        $config = [
+            'functions' => [
+                'echo' => function ($e) use (&$echoed) {
+                    $echoed = $e;
+                }
+            ],
+        ];
+        $envNormal = new Env([]);
+        $envEcho = new Env($config);
+        ob_start();
+        $envNormal->echo('one', 'two');
+        $envEcho->echo('three', 'four');
+        $out = ob_get_clean();
+        $this->assertSame('one two', $out);
+        $this->assertSame('three', $echoed);
+        $this->assertFalse($envNormal->isFunctionExists('echo'));
+        $this->assertTrue($envEcho->isFunctionExists('echo'));
+    }
 }

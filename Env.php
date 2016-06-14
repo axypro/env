@@ -34,6 +34,7 @@ use axy\errors\ContainerReadOnly;
  * @method bool date_default_timezone_set(string $timezone_identifier)
  * @method mixed set_error_handler(callable $error_handler, int $error_types = 32767)
  * @method callable set_exception_handler(callable $exception_handler)
+ * @method echo(string $arg1)
  */
 class Env
 {
@@ -108,10 +109,13 @@ class Env
             }
             return call_user_func_array($callback, $arguments);
         }
-        if (!function_exists($name)) {
-            throw new FieldNotExist($name, 'global', null, $this);
+        if (function_exists($name)) {
+            return call_user_func_array($name, $arguments);
+        } elseif ($name === 'echo') {
+            echo implode(' ', $arguments);
+            return;
         }
-        return call_user_func_array($name, $arguments);
+        throw new FieldNotExist($name, 'global', null, $this);
     }
 
     /**
