@@ -7,10 +7,10 @@
 namespace axy\env;
 
 use axy\env\helpers\Normalizer;
-use axy\errors\InvalidConfig;
-use axy\errors\FieldNotExist;
-use axy\errors\Disabled;
 use axy\errors\ContainerReadOnly;
+use axy\errors\Disabled;
+use axy\errors\FieldNotExist;
+use axy\errors\InvalidConfig;
 
 /**
  * Wrapper for the environment
@@ -21,6 +21,9 @@ use axy\errors\ContainerReadOnly;
  * @property-read array $post
  * @property-read array $request
  * @property-read array $cookie
+ * @property Stream $stdin
+ * @property Stream $stderr
+ * @property Stream $stdout
  * @method void header(string $string, bool $replace = true, int $http_response_code = null)
  * @method bool setcookie(string $name,string $val,int $e=0,string $p=null,string $d=null,bool $s=false,bool $h = false)
  * @method array getallheaders()
@@ -56,8 +59,8 @@ class Env
             } else {
                 throw new InvalidConfig('Env', 'config must be an array or an instance of \axy\env\Config');
             }
-            Normalizer::normalize($config);
         }
+        Normalizer::normalize($config);
         $this->config = $config;
         $this->initTime();
     }
@@ -199,5 +202,21 @@ class Env
     /**
      * @var string[]
      */
-    private static $envArrays = ['server', 'env', 'get', 'post', 'request', 'cookie', 'files'];
+    private static $envArrays = [
+        'server',
+        'env',
+        'get',
+        'post',
+        'request',
+        'cookie',
+        'files',
+        'stdin',
+        'stdout',
+        'stderr'
+    ];
+
+    public function getStream($string)
+    {
+        return $this->{'std'. strtolower($string)};
+    }
 }

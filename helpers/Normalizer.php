@@ -7,6 +7,7 @@
 namespace axy\env\helpers;
 
 use axy\env\Config;
+use axy\env\Stream;
 use axy\errors\InvalidConfig;
 
 /**
@@ -25,6 +26,7 @@ class Normalizer
         self::normalizeFunctions($config);
         self::normalizeTime($config);
         self::normalizeArrays($config);
+        self::normalizeResource($config);
     }
 
     /**
@@ -88,6 +90,23 @@ class Normalizer
             } elseif (!is_array($config->$k)) {
                 $message = 'field "'.$k.'" must be an array';
                 throw new InvalidConfig('Env', $message, 0, null, __NAMESPACE__);
+            }
+        }
+    }
+
+    private static function normalizeResource(Config $config)
+    {
+        $resourceDefault = [
+            'stdin' => fopen("php://stdin", "r"),
+            'stdout' => fopen("php://stdout", "w"),
+            'stderr' => fopen("php://stderr", "r")
+        ];
+
+        foreach ($resourceDefault as $resourceName => $resource) {
+            if (isset($config->$resourceName)) {
+                $config->$resourceName = new Stream($config->$resourceName);
+            } else {
+                $config->$resourceName = new Stream($resource);
             }
         }
     }

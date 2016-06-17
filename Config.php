@@ -121,4 +121,19 @@ class Config
      * @var array
      */
     public $files;
+
+    /**
+     * @var Stream
+     */
+    public $stdin;
+
+    /**
+     * @var Stream
+     */
+    public $stdout;
+
+    /**
+     * @var Stream
+     */
+    public $stderr;
 }
