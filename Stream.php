@@ -2,7 +2,7 @@
 
 namespace axy\env;
 
-class Stream
+class Stream implements IStream
 {
     /**
      * @var resource
@@ -19,13 +19,9 @@ class Stream
         return fread($this->resource, $length);
     }
 
-    public function readLine($prompt = null)
+    public function readLine()
     {
-        if (stream_get_meta_data($this->resource)['uri'] == 'php://stdin') {
-            return readline($prompt);
-        }
-
-        return rtrim($this->readOneLineFromResource(), PHP_EOL);
+        return fgets($this->resource);
     }
 
     public function write($data, $length = null)
@@ -40,10 +36,5 @@ class Stream
     public function isEOF()
     {
         return feof($this->resource);
-    }
-
-    private function readOneLineFromResource()
-    {
-        return fgets($this->resource);
     }
 }

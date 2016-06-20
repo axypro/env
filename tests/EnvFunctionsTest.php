@@ -206,13 +206,6 @@ class EnvFunctionsTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($envEcho->isFunctionExists('echo'));
     }
 
-    public function testStream()
-    {
-        $env = new Env();
-        $stream = $env->getStream('in');
-        $this->assertInstanceOf(Stream::class, $stream);
-    }
-
     public function testStreamField()
     {
         $env = new Env();
@@ -223,20 +216,12 @@ class EnvFunctionsTest extends \PHPUnit_Framework_TestCase
     public function testStreamOut()
     {
         $env = new Env();
-        $stream = $env->getStream('out');
-        $this->assertInstanceOf(Stream::class, $stream);
-
-        $env = new Env();
         $stream = $env->stdout;
         $this->assertInstanceOf(Stream::class, $stream);
     }
 
     public function testStreamErr()
     {
-        $env = new Env();
-        $stream = $env->getStream('err');
-        $this->assertInstanceOf(Stream::class, $stream);
-
         $env = new Env();
         $stream = $env->stderr;
         $this->assertInstanceOf(Stream::class, $stream);
@@ -264,9 +249,9 @@ class EnvFunctionsTest extends \PHPUnit_Framework_TestCase
             'stdin' => $resource
         ]);
 
-        $this->assertSame('one line', $env->stdin->readLine());
-        $this->assertSame('two line', $env->stdin->readLine());
-        $this->assertSame('', $env->stdin->readLine());
+        $this->assertSame("one line\n", $env->stdin->readLine());
+        $this->assertSame("two line", $env->stdin->readLine());
+        $this->assertSame(false, $env->stdin->readLine());
     }
 
     public function testWrite()

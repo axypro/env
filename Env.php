@@ -214,9 +214,4 @@ class Env
         'stdout',
         'stderr'
     ];
-
-    public function getStream($string)
-    {
-        return $this->{'std'. strtolower($string)};
-    }
 }
