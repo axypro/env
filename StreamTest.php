@@ -34,21 +34,23 @@ class StreamTest implements IStream
 
     public function readLine()
     {
-        $result = '';
-
         if ($this->isEOF()) {
             return false;
         }
 
-        do {
-            $char = $this->read(1);
+        $lineList = preg_split("/(\\r\\n|\\r|\\n)/", $this->data, -1, PREG_SPLIT_DELIM_CAPTURE);
+        if (!isset($lineList[0])) {
+            return false;
+        }
 
-            if ($char === false) {
-                break;
-            }
+        $result = $lineList[0];
 
-            $result .= $char;
-        } while ($char !== PHP_EOL);
+        if (isset($lineList[1])) {
+            $result .= $lineList[1];
+        }
+
+        $lineLength = strlen($result);
+        $this->data = substr($this->data, $lineLength);
 
         return $result;
     }
@@ -68,6 +70,6 @@ class StreamTest implements IStream
 
     public function isEOF()
     {
-        return empty($this->data);
+        return $this->data === '' || $this->data === false;
     }
 }
