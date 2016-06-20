@@ -121,4 +121,9 @@ class Config
      * @var array
      */
     public $files;
+
+    /**
+     * @var StreamContainer
+     */
+    public $streams;
 }

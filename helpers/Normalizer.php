@@ -7,7 +7,10 @@
 namespace axy\env\helpers;
 
 use axy\env\Config;
+use axy\env\Stream;
+use axy\env\StreamContainer;
 use axy\errors\InvalidConfig;
+use axy\errors\NotValid;
 
 /**
  * Normalizer of config
@@ -25,6 +28,7 @@ class Normalizer
         self::normalizeFunctions($config);
         self::normalizeTime($config);
         self::normalizeArrays($config);
+        self::normalizeStreams($config);
     }
 
     /**
@@ -90,5 +94,14 @@ class Normalizer
                 throw new InvalidConfig('Env', $message, 0, null, __NAMESPACE__);
             }
         }
+    }
+
+    private static function normalizeStreams(Config $config)
+    {
+        if ($config->streams instanceof StreamContainer) {
+            return;
+        }
+
+        $config->streams = new StreamContainer($config->streams);
     }
 }

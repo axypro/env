@@ -7,8 +7,10 @@
 namespace axy\env\tests;
 
 use axy\env\Env;
+use axy\env\Stream;
 
 /**
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * coversDefaultClass axy\env\Env
  */
 class EnvFunctionsTest extends \PHPUnit_Framework_TestCase
@@ -202,5 +204,137 @@ class EnvFunctionsTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('three', $echoed);
         $this->assertFalse($envNormal->isFunctionExists('echo'));
         $this->assertTrue($envEcho->isFunctionExists('echo'));
+    }
+
+    public function testStream()
+    {
+        $env = new Env();
+
+        $this->assertInstanceOf('axy\env\StreamContainer', $env->streams);
+        $this->assertInstanceOf('axy\env\Stream', $env->streams->stdin);
+    }
+
+    public function testStreamOut()
+    {
+        $env = new Env();
+        $stream = $env->streams->stdout;
+        $this->assertInstanceOf('axy\env\Stream', $stream);
+    }
+
+    public function testStreamErr()
+    {
+        $env = new Env();
+        $stream = $env->streams->stderr;
+        $this->assertInstanceOf('axy\env\Stream', $stream);
+    }
+
+    public function testStreamRead()
+    {
+        $string = uniqid();
+        $resource = $this->getMemoryResourceWithString($string);
+        $stream = new Stream($resource);
+
+        $env = new Env([
+            'streams' => [
+                'stdin' => $stream
+            ]
+        ]);
+
+        $readResult = $env->streams->stdin->read(strlen($string));
+        $this->assertSame($string, $readResult);
+    }
+
+    public function testStreamReadWithoutLength()
+    {
+        $string = "one\ntwo\nthree";
+        $resource = $this->getMemoryResourceWithString($string);
+        $stream = new Stream($resource);
+
+        $env = new Env([
+            'streams' => [
+                'stdin' => $stream
+            ]
+        ]);
+
+        $this->assertSame($string, $env->streams->stdin->read());
+    }
+
+
+    public function testReadLine()
+    {
+        $string = "one line\ntwo line";
+        $resource = $this->getMemoryResourceWithString($string);
+        $stream = new Stream($resource);
+
+        $env = new Env([
+            'streams' => [
+                'stdin' => $stream
+            ]
+        ]);
+
+        $this->assertSame("one line\n", $env->streams->stdin->readLine());
+        $this->assertSame("two line", $env->streams->stdin->readLine());
+        $this->assertSame(false, $env->streams->stdin->readLine());
+    }
+
+    public function testWrite()
+    {
+        $resource = fopen('php://memory', 'rw');
+        $stream = new Stream($resource);
+        $env = new Env([
+            'streams' => [
+                'stdout' => $stream
+            ]
+        ]);
+
+        $string = uniqid();
+        $env->streams->stdout->write($string);
+        rewind($resource);
+        $this->assertSame(fgets($resource), $string);
+
+        $string = uniqid();
+        $env->streams->stdout->write($string, 3);
+        rewind($resource);
+        $this->assertSame(fread($resource, 3), substr($string, 0, 3));
+    }
+
+    public function testIsEOF()
+    {
+        $string = '';
+        $resource = $this->getMemoryResourceWithString($string);
+        $stream = new Stream($resource);
+
+        $env = new Env([
+            'streams' => [
+                'stdin' => $stream
+            ]
+        ]);
+
+        fgets($resource);
+        $this->assertTrue($env->streams->stdin->isEOF());
+    }
+
+    public function testCustomStream()
+    {
+        $string = uniqid();
+        $resource = $this->getMemoryResourceWithString($string);
+        $stream = new Stream($resource);
+
+        $env = new Env([
+            'streams' => [
+                'randomName' => $stream
+            ]
+        ]);
+
+        $readResult = $env->streams->randomName->read(strlen($string));
+        $this->assertSame($string, $readResult);
+    }
+
+    private function getMemoryResourceWithString($string)
+    {
+        $resource = fopen('php://memory', 'rw');
+        fwrite($resource, $string);
+        rewind($resource);
+        return $resource;
     }
 }
