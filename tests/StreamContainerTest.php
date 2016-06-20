@@ -33,4 +33,14 @@ class StreamContainerTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('axy\errors\FieldNotExist');
         $this->assertInstanceOf('axy\env\StreamTest', $streamContainer->notExist);
     }
+
+    public function testBadStream()
+    {
+        $stream = new \stdClass();
+
+        $this->setExpectedException('axy\errors\NotValid');
+        new StreamContainer([
+            'stdin' => $stream,
+        ]);
+    }
 }

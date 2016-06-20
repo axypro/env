@@ -39,10 +39,6 @@ class StreamTest implements IStream
         }
 
         $lineList = preg_split("/(\\r\\n|\\r|\\n)/", $this->data, -1, PREG_SPLIT_DELIM_CAPTURE);
-        if (!isset($lineList[0])) {
-            return false;
-        }
-
         $result = $lineList[0];
 
         if (isset($lineList[1])) {
