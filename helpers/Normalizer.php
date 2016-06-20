@@ -8,7 +8,9 @@ namespace axy\env\helpers;
 
 use axy\env\Config;
 use axy\env\Stream;
+use axy\env\StreamContainer;
 use axy\errors\InvalidConfig;
+use axy\errors\NotValid;
 
 /**
  * Normalizer of config
@@ -26,7 +28,7 @@ class Normalizer
         self::normalizeFunctions($config);
         self::normalizeTime($config);
         self::normalizeArrays($config);
-        self::normalizeResource($config);
+        self::normalizeStreams($config);
     }
 
     /**
@@ -94,20 +96,12 @@ class Normalizer
         }
     }
 
-    private static function normalizeResource(Config $config)
+    private static function normalizeStreams(Config $config)
     {
-        $resourceDefault = [
-            'stdin' => fopen("php://stdin", "r"),
-            'stdout' => fopen("php://stdout", "w"),
-            'stderr' => fopen("php://stderr", "r")
-        ];
-
-        foreach ($resourceDefault as $resourceName => $resource) {
-            if (isset($config->$resourceName)) {
-                $config->$resourceName = new Stream($config->$resourceName);
-            } else {
-                $config->$resourceName = new Stream($resource);
-            }
+        if ($config->streams instanceof StreamContainer) {
+            return;
         }
+
+        $config->streams = new StreamContainer($config->streams);
     }
 }

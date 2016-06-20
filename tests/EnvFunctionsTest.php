@@ -8,6 +8,7 @@ namespace axy\env\tests;
 
 use axy\env\Env;
 use axy\env\Stream;
+use axy\env\StreamContainer;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
@@ -206,24 +207,25 @@ class EnvFunctionsTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($envEcho->isFunctionExists('echo'));
     }
 
-    public function testStreamField()
+    public function testStream()
     {
         $env = new Env();
-        $stream = $env->stdin;
-        $this->assertInstanceOf(Stream::class, $stream);
+
+        $this->assertInstanceOf(StreamContainer::class, $env->streams);
+        $this->assertInstanceOf(Stream::class, $env->streams->stdin);
     }
 
     public function testStreamOut()
     {
         $env = new Env();
-        $stream = $env->stdout;
+        $stream = $env->streams->stdout;
         $this->assertInstanceOf(Stream::class, $stream);
     }
 
     public function testStreamErr()
     {
         $env = new Env();
-        $stream = $env->stderr;
+        $stream = $env->streams->stderr;
         $this->assertInstanceOf(Stream::class, $stream);
     }
 
@@ -231,12 +233,15 @@ class EnvFunctionsTest extends \PHPUnit_Framework_TestCase
     {
         $string = uniqid();
         $resource = $this->getMemoryResourceWithString($string);
+        $stream = new Stream($resource);
 
         $env = new Env([
-            'stdin' => $resource
+            'streams' => [
+                'stdin' => $stream
+            ]
         ]);
 
-        $readResult = $env->stdin->read(strlen($string));
+        $readResult = $env->streams->stdin->read(strlen($string));
         $this->assertSame($string, $readResult);
     }
 
@@ -244,30 +249,36 @@ class EnvFunctionsTest extends \PHPUnit_Framework_TestCase
     {
         $string = "one line\ntwo line";
         $resource = $this->getMemoryResourceWithString($string);
+        $stream = new Stream($resource);
 
         $env = new Env([
-            'stdin' => $resource
+            'streams' => [
+                'stdin' => $stream
+            ]
         ]);
 
-        $this->assertSame("one line\n", $env->stdin->readLine());
-        $this->assertSame("two line", $env->stdin->readLine());
-        $this->assertSame(false, $env->stdin->readLine());
+        $this->assertSame("one line\n", $env->streams->stdin->readLine());
+        $this->assertSame("two line", $env->streams->stdin->readLine());
+        $this->assertSame(false, $env->streams->stdin->readLine());
     }
 
     public function testWrite()
     {
         $resource = fopen('php://memory', 'rw');
+        $stream = new Stream($resource);
         $env = new Env([
-            'stdout' => $resource
+            'streams' => [
+                'stdout' => $stream
+            ]
         ]);
 
         $string = uniqid();
-        $env->stdout->write($string);
+        $env->streams->stdout->write($string);
         rewind($resource);
         $this->assertSame(fgets($resource), $string);
 
         $string = uniqid();
-        $env->stdout->write($string, 3);
+        $env->streams->stdout->write($string, 3);
         rewind($resource);
         $this->assertSame(fread($resource, 3), substr($string, 0, 3));
     }
@@ -276,13 +287,32 @@ class EnvFunctionsTest extends \PHPUnit_Framework_TestCase
     {
         $string = '';
         $resource = $this->getMemoryResourceWithString($string);
+        $stream = new Stream($resource);
 
         $env = new Env([
-            'stdin' => $resource
+            'streams' => [
+                'stdin' => $stream
+            ]
         ]);
 
         fgets($resource);
-        $this->assertTrue($env->stdin->isEOF());
+        $this->assertTrue($env->streams->stdin->isEOF());
+    }
+
+    public function testCustomStream()
+    {
+        $string = uniqid();
+        $resource = $this->getMemoryResourceWithString($string);
+        $stream = new Stream($resource);
+
+        $env = new Env([
+            'streams' => [
+                'randomName' => $stream
+            ]
+        ]);
+
+        $readResult = $env->streams->randomName->read(strlen($string));
+        $this->assertSame($string, $readResult);
     }
 
     private function getMemoryResourceWithString($string)

@@ -123,17 +123,7 @@ class Config
     public $files;
 
     /**
-     * @var Stream
+     * @var StreamContainer
      */
-    public $stdin;
-
-    /**
-     * @var Stream
-     */
-    public $stdout;
-
-    /**
-     * @var Stream
-     */
-    public $stderr;
+    public $streams;
 }
