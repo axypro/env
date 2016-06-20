@@ -14,7 +14,7 @@ class StreamContainerTest extends \PHPUnit_Framework_TestCase
     {
         $streamContainer = new StreamContainer();
 
-        $this->assertInstanceOf(Stream::class, $streamContainer->stdin);
+        $this->assertInstanceOf('axy\env\Stream', $streamContainer->stdin);
 
         $this->setExpectedException('axy\errors\FieldNotExist');
         $streamContainer->notExist;
@@ -27,10 +27,10 @@ class StreamContainerTest extends \PHPUnit_Framework_TestCase
             'stdin' => $stream,
             'randomName' => $stream
         ]);
-        $this->assertInstanceOf(StreamTest::class, $streamContainer->stdin);
-        $this->assertInstanceOf(StreamTest::class, $streamContainer->randomName);
+        $this->assertInstanceOf('axy\env\StreamTest', $streamContainer->stdin);
+        $this->assertInstanceOf('axy\env\StreamTest', $streamContainer->randomName);
 
         $this->setExpectedException('axy\errors\FieldNotExist');
-        $this->assertInstanceOf(StreamTest::class, $streamContainer->notExist);
+        $this->assertInstanceOf('axy\env\StreamTest', $streamContainer->notExist);
     }
 }

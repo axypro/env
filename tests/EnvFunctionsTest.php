@@ -211,22 +211,22 @@ class EnvFunctionsTest extends \PHPUnit_Framework_TestCase
     {
         $env = new Env();
 
-        $this->assertInstanceOf(StreamContainer::class, $env->streams);
-        $this->assertInstanceOf(Stream::class, $env->streams->stdin);
+        $this->assertInstanceOf('axy\env\StreamContainer', $env->streams);
+        $this->assertInstanceOf('axy\env\Stream', $env->streams->stdin);
     }
 
     public function testStreamOut()
     {
         $env = new Env();
         $stream = $env->streams->stdout;
-        $this->assertInstanceOf(Stream::class, $stream);
+        $this->assertInstanceOf('axy\env\Stream', $stream);
     }
 
     public function testStreamErr()
     {
         $env = new Env();
         $stream = $env->streams->stderr;
-        $this->assertInstanceOf(Stream::class, $stream);
+        $this->assertInstanceOf('axy\env\Stream', $stream);
     }
 
     public function testStreamRead()
