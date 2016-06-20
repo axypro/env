@@ -8,7 +8,6 @@ namespace axy\env\tests;
 
 use axy\env\Env;
 use axy\env\Stream;
-use axy\env\StreamContainer;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
@@ -244,6 +243,22 @@ class EnvFunctionsTest extends \PHPUnit_Framework_TestCase
         $readResult = $env->streams->stdin->read(strlen($string));
         $this->assertSame($string, $readResult);
     }
+
+    public function testStreamReadWithoutLength()
+    {
+        $string = "one\ntwo\nthree";
+        $resource = $this->getMemoryResourceWithString($string);
+        $stream = new Stream($resource);
+
+        $env = new Env([
+            'streams' => [
+                'stdin' => $stream
+            ]
+        ]);
+
+        $this->assertSame($string, $env->streams->stdin->read());
+    }
+
 
     public function testReadLine()
     {

@@ -22,6 +22,20 @@ class StreamTestTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($string, $result);
     }
 
+    public function testReadWithoutLength()
+    {
+        $string = "one\ntwo\nthree";
+        $streamTest = new StreamTest($string);
+
+        $env = new Env([
+            'streams' => [
+                'stdin' => $streamTest
+            ]
+        ]);
+
+        $this->assertSame($string, $env->streams->stdin->read());
+    }
+
     public function testReadLine()
     {
         $string = "One line\nTwo line";

@@ -9,21 +9,42 @@ class Stream implements IStream
      */
     private $resource;
 
+    /**
+     * @param resource $resource
+     */
     public function __construct($resource)
     {
         $this->resource = $resource;
     }
 
-    public function read($length)
+    /**
+     * {@inheritdoc}
+     */
+    public function read($length = null)
     {
-        return fread($this->resource, $length);
+        if (!is_null($length)) {
+            return fread($this->resource, $length);
+        }
+
+        $result = '';
+        while (!feof($this->resource)) {
+            $result .= fread($this->resource, $this->dataSegment);
+        }
+
+        return $result;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function readLine()
     {
         return fgets($this->resource);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function write($data, $length = null)
     {
         if (is_null($length)) {
@@ -33,8 +54,13 @@ class Stream implements IStream
         return fwrite($this->resource, $data, $length);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function isEOF()
     {
         return feof($this->resource);
     }
+
+    private $dataSegment = 10;
 }

@@ -2,36 +2,41 @@
 
 namespace axy\env;
 
+/**
+ * when we read - we read from start of data and remove what we read
+ * when we write - we concatenate to end
+ */
 class StreamTest implements IStream
 {
-    /**
-     * @var string
-     */
-    private $data;
-
     /**
      * @param string $data
      */
     public function __construct($data = '')
     {
-        $this->data = $data;
+        $this->writeData($data);
     }
 
     /**
-     * То что читаем из строки - удаляем
-     *
-     * @param int $length
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function read($length)
+    public function read($length = null)
     {
+        if (is_null($length)) {
+            $result = $this->data;
+            $this->writeData(null);
+
+            return $result;
+        }
+
         $result = substr($this->data, 0, $length);
-        $this->data = substr($this->data, $length);
+        $this->writeData(substr($this->data, $length));
 
         return $result;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function readLine()
     {
         if ($this->isEOF()) {
@@ -46,11 +51,14 @@ class StreamTest implements IStream
         }
 
         $lineLength = strlen($result);
-        $this->data = substr($this->data, $lineLength);
+        $this->writeData(substr($this->data, $lineLength));
 
         return $result;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function write($data, $length = null)
     {
         if (is_null($length)) {
@@ -59,13 +67,33 @@ class StreamTest implements IStream
             $write = substr($data, 0, $length);
         }
 
-        $this->data .= $write;
+        $this->writeData($this->data . $write);
 
         return strlen($write);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function isEOF()
     {
-        return $this->data === '' || $this->data === false;
+        return $this->data === '';
     }
+
+    /**
+     * @param mixed $data
+     */
+    private function writeData($data)
+    {
+        if (!is_string($data)) {
+            $data = '';
+        }
+
+        $this->data = $data;
+    }
+
+    /**
+     * @var string
+     */
+    private $data;
 }

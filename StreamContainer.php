@@ -19,7 +19,7 @@ class StreamContainer
         }
 
         foreach ($config as $streamName => $streamObj) {
-            if (!$streamObj instanceof IStream) {
+            if (!($streamObj instanceof IStream)) {
                 throw new NotValid($streamObj, $streamName . " don't implement IStream");
             }
 
@@ -27,6 +27,10 @@ class StreamContainer
         }
     }
 
+    /**
+     * @param string $name
+     * @return mixed
+     */
     public function __get($name)
     {
         if (isset($this->streamList[$name])) {
