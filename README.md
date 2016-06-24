@@ -299,8 +299,71 @@ In phpdoc for autocomplete lists the following:
  * [date_default_timezone_set](http://php.net/date_default_timezone_set)
  * [set_error_handler](http://php.net/set_error_handler)
  * [set_exception_handler](http://php.net/set_exception_handler)
+ * `echo()`
 
 But theoretically it can be used for any function.
+
+#### Streams
+
+Access to [php I/O streams](http://php.net/manual/en/wrappers.php.php).
+
+```php
+$env->streams->stdout->write('Output');
+```
+
+Container `$env->streams` contains following object:
+
+* `stdin`
+* `stdout`
+* `stderr`
+* `input`
+* `output`
+
+These objects implement interface [IStream](https://github.com/axypro/env/blob/master/IStream.php).
+
+You can create object with the interface IStream and spoof a stream:
+
+```php
+$config = [
+    'streams' => [
+        'stdin' => new MyStream(),
+    ],
+];
+$env = new Env($config);
+```
+
+You can use classes `Stream` and `StreamMock`:
+
+`Stream` is wrapper on a stream resource.
+
+```php
+$config = [
+    'streams' => [
+        'stdin' => new \axy\env\Stream(fopen('/my/file.txt')),
+    ],
+];
+$env = new Env($config);
+```
+
+##### `StreamMock`
+
+StreamMock is a wrapper on a string.
+
+```php
+$mock = new \axy\env\StreamMock('content');
+$mock->read(3); // "con"
+$mock->read(); // "tent"
+$mock->write('!');
+$mock->setPosition(0);
+$mock->read(); // "content!"
+```
+
+In addition to the methods of `IStream`, `StreamMock` supports following methods:
+
+* `setContent(string $content [, int $position])`
+* `setPosition(int $position)`
+* `getContent(): string`
+* `getPosition(): int`
 
 #### Factory
 
