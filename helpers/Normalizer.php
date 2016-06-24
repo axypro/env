@@ -96,12 +96,14 @@ class Normalizer
         }
     }
 
+    /**
+     * @param \axy\env\Config $config
+     */
     private static function normalizeStreams(Config $config)
     {
         if ($config->streams instanceof StreamContainer) {
             return;
         }
-
         $config->streams = new StreamContainer($config->streams);
     }
 }

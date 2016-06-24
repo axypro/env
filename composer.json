@@ -11,6 +11,10 @@
         {
             "name": "Oleg Grigoriev",
             "email": "go.vasac@gmail.com"
+        },
+        {
+            "name": "Constantin Conavaloff",
+            "email": "constantin@conovaloff.com"
         }
     ],
     "require": {

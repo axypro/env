@@ -2,6 +2,7 @@
 /**
  * @package axy\env
  * @author Oleg Grigoriev <go.vasac@gmail.com>
+ * @author Constantin Conavaloff <constantin@conovaloff.com>
  */
 
 namespace axy\env;
@@ -123,7 +124,9 @@ class Config
     public $files;
 
     /**
-     * @var StreamContainer
+     * Standard I/O streams
+     *
+     * @var StreamContainer|array
      */
     public $streams;
 }

@@ -1,5 +1,9 @@
 ### dev-master
 
+### 0.2.0 (24.07.2015)
+
+* Streams
+
 ### 0.1.3 (14.07.2015)
 
 * `echo()` can also be overridden

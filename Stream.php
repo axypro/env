@@ -1,14 +1,17 @@
 <?php
+/**
+ * @package axy\env
+ * @author Constantin Conavaloff <constantin@conovaloff.com>
+ * @author Oleg Grigoriev <go.vasac@gmail.com>
+ */
 
 namespace axy\env;
 
+/**
+ * Wrapper for stream resources
+ */
 class Stream implements IStream
 {
-    /**
-     * @var resource
-     */
-    private $resource;
-
     /**
      * @param resource $resource
      */
@@ -22,24 +25,28 @@ class Stream implements IStream
      */
     public function read($length = null)
     {
-        if (!is_null($length)) {
+        if ($length !== null) {
             return fread($this->resource, $length);
         }
-
-        $result = '';
+        $result = [];
         while (!feof($this->resource)) {
-            $result .= fread($this->resource, $this->dataSegment);
+            $result[] = fread($this->resource, 512);
         }
-
-        return $result;
+        return implode('', $result);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function readLine()
+    public function readLine($trim = false)
     {
-        return fgets($this->resource);
+        $result = fgets($this->resource);
+        if ($result === false) {
+            $result = '';
+        } elseif ($trim) {
+            $result = rtrim($result, "\n\r");
+        }
+        return $result;
     }
 
     /**
@@ -47,11 +54,12 @@ class Stream implements IStream
      */
     public function write($data, $length = null)
     {
-        if (is_null($length)) {
-            return fwrite($this->resource, $data);
+        if ($length !== null) {
+            $result = fwrite($this->resource, $data, $length);
+        } else {
+            $result = fwrite($this->resource, $data);
         }
-
-        return fwrite($this->resource, $data, $length);
+        return $result;
     }
 
     /**
@@ -62,5 +70,24 @@ class Stream implements IStream
         return feof($this->resource);
     }
 
-    private $dataSegment = 10;
+    /**
+     * {@inheritdoc}
+     */
+    public function setPosition($pos)
+    {
+        fseek($this->resource, $pos);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPosition()
+    {
+        return ftell($this->resource);
+    }
+
+    /**
+     * @var resource
+     */
+    private $resource;
 }

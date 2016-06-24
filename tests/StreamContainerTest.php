@@ -1,43 +1,52 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: conovaloff
- * Date: 20.06.16
- * Time: 16:42
- */
 
 namespace axy\env;
 
+use axy\env\Env;
+use axy\env\StreamMock;
+
 class StreamContainerTest extends \PHPUnit_Framework_TestCase
 {
+    public function testEnv()
+    {
+        $env = new Env();
+        $this->assertInstanceOf('axy\env\StreamContainer', $env->streams);
+        $this->assertInstanceOf('axy\env\Stream', $env->streams->stdin);
+        $this->assertInstanceOf('axy\env\Stream', $env->streams->stdout);
+        $this->assertInstanceOf('axy\env\Stream', $env->streams->stderr);
+        $this->expectOutputString('test');
+        $env->streams->output->write('test');
+    }
+
     public function testDefault()
     {
-        $streamContainer = new StreamContainer();
-
-        $this->assertInstanceOf('axy\env\Stream', $streamContainer->stdin);
-
+        $container = new StreamContainer();
+        $this->assertTrue(isset($container->stdin));
+        $this->assertFalse(isset($container->none));
+        $this->assertInstanceOf('axy\env\Stream', $container->stdin);
         $this->setExpectedException('axy\errors\FieldNotExist');
-        $streamContainer->notExist;
+        $container->__get('none');
     }
 
     public function testChangeField()
     {
-        $stream = new StreamTest();
-        $streamContainer = new StreamContainer([
+        $stream = new StreamMock();
+        $container = new StreamContainer([
             'stdin' => $stream,
-            'randomName' => $stream
+            'randomName' => $stream,
         ]);
-        $this->assertInstanceOf('axy\env\StreamTest', $streamContainer->stdin);
-        $this->assertInstanceOf('axy\env\StreamTest', $streamContainer->randomName);
-
+        $this->assertTrue(isset($container->stdin));
+        $this->assertTrue(isset($container->randomName));
+        $this->assertFalse(isset($container->none));
+        $this->assertInstanceOf('axy\env\StreamMock', $container->stdin);
+        $this->assertInstanceOf('axy\env\StreamMock', $container->__get('randomName'));
         $this->setExpectedException('axy\errors\FieldNotExist');
-        $this->assertInstanceOf('axy\env\StreamTest', $streamContainer->notExist);
+        $container->__get('none');
     }
 
     public function testBadStream()
     {
         $stream = new \stdClass();
-
         $this->setExpectedException('axy\errors\NotValid');
         new StreamContainer([
             'stdin' => $stream,

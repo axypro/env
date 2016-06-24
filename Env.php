@@ -2,6 +2,7 @@
 /**
  * @package axy\env
  * @author Oleg Grigoriev <go.vasac@gmail.com>
+ * @author Constantin Conavaloff <constantin@conovaloff.com>
  */
 
 namespace axy\env;
@@ -21,7 +22,7 @@ use axy\errors\InvalidConfig;
  * @property-read array $post
  * @property-read array $request
  * @property-read array $cookie
- * @property-read StreamContainer $streams
+ * @property-read \axy\env\StreamContainer $streams
  * @method void header(string $string, bool $replace = true, int $http_response_code = null)
  * @method bool setcookie(string $name,string $val,int $e=0,string $p=null,string $d=null,bool $s=false,bool $h = false)
  * @method array getallheaders()
